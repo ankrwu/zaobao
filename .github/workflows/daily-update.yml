@@ -31,6 +31,31 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate daily report
+        run: node scripts/generate-daily.js
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit new daily report
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config user.email "wubaiqing@vip.qq.com"
+          git config user.name "wubaiqing"
+          git commit -m "feat: 自动生成每日日报 [ci skip]"
+
+      - name: Push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+
       - name: Build site
         run: npm run doc:build
 
