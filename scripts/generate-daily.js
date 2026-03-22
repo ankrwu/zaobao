@@ -297,8 +297,8 @@ function generateContent(todayInfo, days, items) {
   lines.push(`### ${todayInfo.formatted} 今天是每日时报陪伴您的第 ${days} 天`);
   lines.push('');
 
-  // 政策条目（最多 8 条）
-  const selectedItems = items.slice(0, 8);
+  // 政策条目（最多 20 条）
+  const selectedItems = items.slice(0, 20);
   for (const item of selectedItems) {
     lines.push(`[${item.category}] ${item.title}：<${item.url}>`);
     lines.push('');
@@ -345,7 +345,7 @@ async function main() {
     console.log('生成空模板...\n');
   } else {
     console.log(`\n总计获取 ${items.length} 条政策信息`);
-    console.log(`将选取前 8 条生成日报\n`);
+    console.log(`将选取前 20 条生成日报\n`);
   }
 
   // 生成内容
