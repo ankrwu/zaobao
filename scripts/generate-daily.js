@@ -268,6 +268,10 @@ async function fetchSolarItems() {
     try {
       const items = await source.parse();
       console.log(`  获取到 ${items.length} 条信息\n`);
+      // 为每条新闻添加来源信息
+      items.forEach(item => {
+        item.source = source.name;
+      });
       allItems.push(...items);
       // 添加延迟避免请求过快
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -300,10 +304,10 @@ function generateContent(todayInfo, days, items) {
   lines.push(`### ${todayInfo.formatted} 今天是光伏日报陪伴您的第 ${days} 天`);
   lines.push('');
 
-  // 新闻条目（最多 10 条）
-  const selectedItems = items.slice(0, 10);
+  // 新闻条目（最多 20 条）
+  const selectedItems = items.slice(0, 20);
   for (const item of selectedItems) {
-    lines.push(`[${item.category}] ${item.title}：<${item.url}>`);
+    lines.push(`[${item.category}] ${item.title}（${item.source}）：<${item.url}>`);
     lines.push('');
   }
 
