@@ -4,27 +4,27 @@ const fs = require('fs');
 const path = require('path');
 
 // 项目开始日期
-const START_DATE = new Date('2018-08-24');
+const START_DATE = new Date('2026-03-22');
 
-// 政策分类映射
+// 光伏行业分类映射
 const CATEGORY_MAP = {
   '政策': '政策',
   '法规': '法规',
   '通知': '通知',
-  '财税': '财税',
-  '科技': '科技',
-  '教育': '教育',
-  '医疗': '医疗',
-  '社保': '社保',
-  '环保': '环保',
-  '金融': '财税',
-  '财政': '财税',
-  '税务': '财税',
-  '印发': '政策',
-  '发布': '通知',
-  '办法': '法规',
-  '规定': '法规',
-  '意见': '政策',
+  '技术': '技术',
+  '市场': '市场',
+  '企业': '企业',
+  '数据': '数据',
+  '项目': '市场',
+  '投资': '市场',
+  '装机': '数据',
+  '发电': '数据',
+  '电池': '技术',
+  '组件': '技术',
+  '硅料': '技术',
+  '硅片': '技术',
+  '逆变器': '技术',
+  '储能': '技术',
 };
 
 // 请求配置
@@ -48,7 +48,7 @@ function getCategoryByTitle(title) {
       return value;
     }
   }
-  return '政策';
+  return '市场';
 }
 
 /**
@@ -80,76 +80,12 @@ function getTodayInfo() {
 }
 
 /**
- * 解析中国政府网政策库
+ * 解析国家能源局
  */
-async function parseGovCnZhengce() {
-  const items = [];
-  const urls = [
-    'https://www.gov.cn/zhengce/',
-    'https://www.gov.cn/zhengce/zhengceku/index.htm',
-  ];
-
-  for (const url of urls) {
-    try {
-      console.log(`  尝试: ${url}`);
-      const response = await axios.get(url, REQUEST_CONFIG);
-      const $ = cheerio.load(response.data);
-
-      // 尝试多种选择器
-      const selectors = [
-        '.news_box .list li a',
-        '.list li a',
-        '.news_list li a',
-        '.main ul li a',
-        '.content ul li a',
-        'ul.list li a',
-        '.item a'
-      ];
-
-      for (const selector of selectors) {
-        $(selector).each((index, element) => {
-          const $link = $(element);
-          const title = $link.text().trim();
-          let href = $link.attr('href');
-
-          if (title && href && title.length > 5 && !title.includes('更多')) {
-            // 处理相对路径
-            if (href.startsWith('/')) {
-              href = `https://www.gov.cn${href}`;
-            } else if (!href.startsWith('http')) {
-              href = `https://www.gov.cn/zhengce/${href}`;
-            }
-
-            items.push({
-              category: getCategoryByTitle(title),
-              title: title.substring(0, 100), // 限制标题长度
-              url: href
-            });
-          }
-        });
-
-        if (items.length > 0) {
-          console.log(`  使用选择器 "${selector}" 找到 ${items.length} 条`);
-          break;
-        }
-      }
-
-      if (items.length > 0) break;
-    } catch (error) {
-      console.error(`  请求失败: ${error.message}`);
-    }
-  }
-
-  return items;
-}
-
-/**
- * 解析国务院政策文件
- */
-async function parseGovCnLatest() {
+async function parseNEA() {
   const items = [];
   try {
-    const response = await axios.get('https://www.gov.cn/lianbo/index.htm', REQUEST_CONFIG);
+    const response = await axios.get('https://www.nea.gov.cn/', REQUEST_CONFIG);
     const $ = cheerio.load(response.data);
 
     $('a').each((index, element) => {
@@ -157,13 +93,12 @@ async function parseGovCnLatest() {
       const title = $link.text().trim();
       let href = $link.attr('href');
 
-      if (title && href && title.length > 10 && !title.includes('更多') && !title.includes('登录')) {
-        if (href.startsWith('/')) {
-          href = `https://www.gov.cn${href}`;
-        }
-
-        // 过滤非政策类链接
-        if (href.includes('gov.cn') && (href.includes('zhengce') || href.includes('content'))) {
+      if (title && href && title.length > 10 && !title.includes('更多')) {
+        // 过滤光伏/太阳能/新能源相关
+        if (title.includes('光伏') || title.includes('太阳能') || title.includes('新能源') || title.includes('可再生能源')) {
+          if (href.startsWith('/')) {
+            href = `https://www.nea.gov.cn${href}`;
+          }
           items.push({
             category: getCategoryByTitle(title),
             title: title.substring(0, 100),
@@ -173,15 +108,113 @@ async function parseGovCnLatest() {
       }
     });
   } catch (error) {
-    console.error(`  解析国务院联播失败: ${error.message}`);
+    console.error(`  解析国家能源局失败: ${error.message}`);
   }
   return items;
 }
 
 /**
- * 解析国家发改委
+ * 解析工信部光伏相关政策
  */
-async function parseNdrc() {
+async function parseMIIT() {
+  const items = [];
+  try {
+    const response = await axios.get('https://www.miit.gov.cn/zwgk/zcwj/wjfb/index.html', REQUEST_CONFIG);
+    const $ = cheerio.load(response.data);
+
+    $('a').each((index, element) => {
+      const $link = $(element);
+      const title = $link.text().trim();
+      let href = $link.attr('href');
+
+      if (title && href && title.length > 5 && !title.includes('更多')) {
+        // 过滤光伏相关
+        if (title.includes('光伏') || title.includes('太阳能') || title.includes('新能源') || title.includes('组件')) {
+          if (href.startsWith('/')) {
+            href = `https://www.miit.gov.cn${href}`;
+          }
+          items.push({
+            category: '政策',
+            title: title.substring(0, 100),
+            url: href
+          });
+        }
+      }
+    });
+  } catch (error) {
+    console.error(`  解析工信部失败: ${error.message}`);
+  }
+  return items;
+}
+
+/**
+ * 解析中国光伏行业协会
+ */
+async function parseCPIA() {
+  const items = [];
+  try {
+    const response = await axios.get('https://www.chinapv.org.cn/', REQUEST_CONFIG);
+    const $ = cheerio.load(response.data);
+
+    $('a').each((index, element) => {
+      const $link = $(element);
+      const title = $link.text().trim();
+      let href = $link.attr('href');
+
+      if (title && href && title.length > 8 && !title.includes('更多') && !title.includes('登录')) {
+        if (href.startsWith('/')) {
+          href = `https://www.chinapv.org.cn${href}`;
+        } else if (!href.startsWith('http')) {
+          href = `https://www.chinapv.org.cn/${href}`;
+        }
+        items.push({
+          category: getCategoryByTitle(title),
+          title: title.substring(0, 100),
+          url: href
+        });
+      }
+    });
+  } catch (error) {
+    console.error(`  解析光伏行业协会失败: ${error.message}`);
+  }
+  return items;
+}
+
+/**
+ * 解析北极星太阳能光伏网
+ */
+async function parseBJX() {
+  const items = [];
+  try {
+    const response = await axios.get('https://guangfu.bjx.com.cn/yw/', REQUEST_CONFIG);
+    const $ = cheerio.load(response.data);
+
+    $('a').each((index, element) => {
+      const $link = $(element);
+      const title = $link.text().trim();
+      let href = $link.attr('href');
+
+      if (title && href && title.length > 10 && !title.includes('更多') && !title.includes('登录')) {
+        if (!href.startsWith('http')) {
+          href = `https://guangfu.bjx.com.cn${href}`;
+        }
+        items.push({
+          category: getCategoryByTitle(title),
+          title: title.substring(0, 100),
+          url: href
+        });
+      }
+    });
+  } catch (error) {
+    console.error(`  解析北极星光伏网失败: ${error.message}`);
+  }
+  return items;
+}
+
+/**
+ * 解析国家发改委新能源政策
+ */
+async function parseNDRC() {
   const items = [];
   try {
     const response = await axios.get('https://www.ndrc.gov.cn/xwdt/tzgg/', REQUEST_CONFIG);
@@ -193,17 +226,17 @@ async function parseNdrc() {
       let href = $link.attr('href');
 
       if (title && href && title.length > 5 && !title.includes('更多')) {
-        if (href.startsWith('/')) {
-          href = `https://www.ndrc.gov.cn${href}`;
-        } else if (!href.startsWith('http')) {
-          href = `https://www.ndrc.gov.cn/xwdt/tzgg/${href}`;
+        // 过滤新能源相关
+        if (title.includes('光伏') || title.includes('太阳能') || title.includes('新能源') || title.includes('能源') || title.includes('电力')) {
+          if (href.startsWith('/')) {
+            href = `https://www.ndrc.gov.cn${href}`;
+          }
+          items.push({
+            category: getCategoryByTitle(title),
+            title: title.substring(0, 100),
+            url: href
+          });
         }
-
-        items.push({
-          category: getCategoryByTitle(title),
-          title: title.substring(0, 100),
-          url: href
-        });
       }
     });
   } catch (error) {
@@ -213,51 +246,18 @@ async function parseNdrc() {
 }
 
 /**
- * 解析财政部
+ * 获取光伏新闻信息
  */
-async function parseMof() {
-  const items = [];
-  try {
-    const response = await axios.get('https://www.mof.gov.cn/zhengwuxinxi/zhengcefabu/', REQUEST_CONFIG);
-    const $ = cheerio.load(response.data);
-
-    $('a').each((index, element) => {
-      const $link = $(element);
-      const title = $link.text().trim();
-      let href = $link.attr('href');
-
-      if (title && href && title.length > 5 && !title.includes('更多')) {
-        if (href.startsWith('/')) {
-          href = `https://www.mof.gov.cn${href}`;
-        } else if (!href.startsWith('http')) {
-          href = `https://www.mof.gov.cn/zhengwuxinxi/zhengcefabu/${href}`;
-        }
-
-        items.push({
-          category: '财税',
-          title: title.substring(0, 100),
-          url: href
-        });
-      }
-    });
-  } catch (error) {
-    console.error(`  解析财政部失败: ${error.message}`);
-  }
-  return items;
-}
-
-/**
- * 获取政策信息
- */
-async function fetchPolicyItems() {
-  console.log('开始获取政策信息...\n');
+async function fetchSolarItems() {
+  console.log('开始获取光伏行业信息...\n');
 
   const allItems = [];
   const sources = [
-    { name: '中国政府网政策库', parse: parseGovCnZhengce },
-    { name: '国务院联播', parse: parseGovCnLatest },
-    { name: '国家发改委', parse: parseNdrc },
-    { name: '财政部', parse: parseMof },
+    { name: '国家能源局', parse: parseNEA },
+    { name: '工信部', parse: parseMIIT },
+    { name: '中国光伏行业协会', parse: parseCPIA },
+    { name: '北极星光伏网', parse: parseBJX },
+    { name: '国家发改委', parse: parseNDRC },
   ];
 
   for (const source of sources) {
@@ -294,11 +294,11 @@ function generateContent(todayInfo, days, items) {
   const lines = [];
 
   // 标题
-  lines.push(`### ${todayInfo.formatted} 今天是每日时报陪伴您的第 ${days} 天`);
+  lines.push(`### ${todayInfo.formatted} 今天是光伏日报陪伴您的第 ${days} 天`);
   lines.push('');
 
-  // 政策条目（最多 20 条）
-  const selectedItems = items.slice(0, 20);
+  // 新闻条目（最多 10 条）
+  const selectedItems = items.slice(0, 10);
   for (const item of selectedItems) {
     lines.push(`[${item.category}] ${item.title}：<${item.url}>`);
     lines.push('');
@@ -321,7 +321,7 @@ function ensureDirectoryExists(filePath) {
  * 主函数
  */
 async function main() {
-  console.log('=== 每日日报生成器 ===\n');
+  console.log('=== 光伏日报生成器 ===\n');
 
   const todayInfo = getTodayInfo();
   const days = calculateDays();
@@ -337,15 +337,15 @@ async function main() {
     return;
   }
 
-  // 获取政策信息
-  const items = await fetchPolicyItems();
+  // 获取光伏新闻信息
+  const items = await fetchSolarItems();
 
   if (items.length === 0) {
-    console.log('\n警告: 未获取到任何政策信息！');
+    console.log('\n警告: 未获取到任何光伏信息！');
     console.log('生成空模板...\n');
   } else {
-    console.log(`\n总计获取 ${items.length} 条政策信息`);
-    console.log(`将选取前 20 条生成日报\n`);
+    console.log(`\n总计获取 ${items.length} 条光伏信息`);
+    console.log(`将选取前 10 条生成日报\n`);
   }
 
   // 生成内容

@@ -47,9 +47,9 @@ jobs:
       - name: Commit new daily report
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
-          git config user.email "wubaiqing@vip.qq.com"
-          git config user.name "wubaiqing"
-          git commit -m "feat: 自动生成每日日报 [ci skip]"
+          git config user.email "ankrwu@users.noreply.github.com"
+          git config user.name "ankrwu"
+          git commit -m "feat: 自动生成每日光伏日报 [ci skip]"
 
       - name: Push changes
         if: steps.check_changes.outputs.has_changes == 'true'
@@ -63,8 +63,8 @@ jobs:
         run: |
           cd docs/.vuepress/dist
           git init
-          git config user.email "wubaiqing@vip.qq.com"
-          git config user.name "wubaiqing"
+          git config user.email "ankrwu@users.noreply.github.com"
+          git config user.name "ankrwu"
           git add -A
-          git commit -m 'deploy: 发布到 gh-pages [ci skip]'
+          git commit -m 'deploy: 发布光伏日报到 gh-pages [ci skip]'
           git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git master:gh-pages
