@@ -52,6 +52,19 @@ function getCategoryByTitle(title) {
 }
 
 /**
+ * 格式化标题：在中文与数字/字母之间添加空格
+ */
+function formatTitle(title) {
+  // 中文与数字之间添加空格
+  let result = title.replace(/([\u4e00-\u9fa5])(\d)/g, '$1 $2');
+  result = result.replace(/(\d)([\u4e00-\u9fa5])/g, '$1 $2');
+  // 中文与字母之间添加空格
+  result = result.replace(/([\u4e00-\u9fa5])([a-zA-Z])/g, '$1 $2');
+  result = result.replace(/([a-zA-Z])([\u4e00-\u9fa5])/g, '$1 $2');
+  return result;
+}
+
+/**
  * 计算从项目开始到今天的天数
  */
 function calculateDays() {
@@ -307,7 +320,8 @@ function generateContent(todayInfo, days, items) {
   // 新闻条目（最多 20 条）
   const selectedItems = items.slice(0, 20);
   for (const item of selectedItems) {
-    lines.push(`[${item.category}] ${item.title}（${item.source}）：<${item.url}>`);
+    const formattedTitle = formatTitle(item.title);
+    lines.push(`[${item.category}] ${formattedTitle}（${item.source}）：<${item.url}>`);
     lines.push('');
   }
 
@@ -352,7 +366,7 @@ async function main() {
     console.log('生成空模板...\n');
   } else {
     console.log(`\n总计获取 ${items.length} 条光伏信息`);
-    console.log(`将选取前 10 条生成日报\n`);
+    console.log(`将选取前 20 条生成日报\n`);
   }
 
   // 生成内容
