@@ -96,8 +96,11 @@ async function parseNEA() {
       if (title && href && title.length > 10 && !title.includes('更多')) {
         // 过滤光伏/太阳能/新能源相关
         if (title.includes('光伏') || title.includes('太阳能') || title.includes('新能源') || title.includes('可再生能源')) {
+          // 处理 URL
           if (href.startsWith('/')) {
             href = `https://www.nea.gov.cn${href}`;
+          } else if (!href.startsWith('http')) {
+            href = `https://www.nea.gov.cn/${href}`;
           }
           items.push({
             category: getCategoryByTitle(title),
