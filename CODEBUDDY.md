@@ -83,37 +83,28 @@ pnpm test:coverage
 
 ### 信息来源
 
-国家政策信息主要来源（已验证可访问）：
+光伏行业新闻信息主要来源（已验证可访问）：
 
-**政策数据库**
-- 人民数据国家政策数据库：https://data.people.com.cn/pd/gjzcxx/index.html
-- 人民数据政策库：https://data.people.com.cn/pd/zck
+**行业门户网站**
+- 光伏们：https://www.guangfu.com.cn/
+- 光伏资讯：https://www.solarbe.com/
+- 索比光伏网：https://www.solarbe.com/
+- 北极星太阳能光伏网：https://guangfu.bjx.com.cn/
+- 光伏商讯网：https://www.solarpvsources.com/
 
-**国务院及综合部门**
-- 中国政府网：https://www.gov.cn/
-- 国家发改委：https://www.ndrc.gov.cn/
-- 国务院新闻办公室：http://www.scio.gov.cn/
+**行业协会与机构**
+- 中国光伏行业协会 (CPIA)：https://www.chinapv.org.cn/
+- 中国可再生能源学会：https://www.cres.org.cn/
+- 国家可再生能源中心：https://www.nrec.org.cn/
 
-**经济金融部门**
-- 财政部：https://www.mof.gov.cn/
-- 中国人民银行：http://www.pbc.gov.cn/
-- 商务部：https://www.mofcom.gov.cn/
+**企业资讯平台**
+- 光伏们企业频道：https://www.guangfu.com.cn/qiye/
+- 北极星光伏企业库：https://guangfu.bjx.com.cn/qiye/
 
-**社会民生部门**
-- 教育部：https://www.moe.gov.cn/
-- 人社部：https://www.mohrss.gov.cn/
-- 民政部：https://www.mca.gov.cn/
-- 国家医保局：https://www.nhsa.gov.cn/
-- 文化和旅游部：https://www.mct.gov.cn/
-
-**产业建设部门**
-- 工信部：https://www.miit.gov.cn/
-- 住建部：https://www.mohurd.gov.cn/
-- 应急管理部：https://www.mem.gov.cn/
-
-**司法执法机关**
-- 最高人民法院：https://www.court.gov.cn/
-- 最高人民检察院：https://www.spp.gov.cn/
+**政策与数据来源**
+- 国家能源局：https://www.nea.gov.cn/
+- 中国政府网能源政策：https://www.gov.cn/zhengce/
+- 国家发改委新能源政策：https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/
 
 ## 包管理器
 

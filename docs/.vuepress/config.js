@@ -1,9 +1,9 @@
 const readFileList = require("../../scripts/build.js");
 
 module.exports = {
-  title: "每日时报",
+  title: "光伏日报",
   description:
-    "每日时报，以国家政策为主要分享课题。内容会以：政策、法规、通知、财税等板块作为主要分类。",
+    "光伏日报，聚焦光伏行业动态。内容涵盖：政策、技术、市场、企业等板块。",
   head: [
     [
       "link",
@@ -11,7 +11,7 @@ module.exports = {
         rel: "alternate",
         type: "application/rss+xml",
         href: "/rss.xml",
-        title: "每日时报"
+        title: "光伏日报"
       }
     ]
   ],
@@ -26,9 +26,9 @@ module.exports = {
     [
       "vuepress-plugin-rss-support",
       {
-        site_url: "https://wubaiqing.github.io/zaobao",
+        site_url: "https://ankrwu.github.io/zaobao",
         filter: page => /^\/20.+/.test(page.path),
-        copyright: "2026每日时报",
+        copyright: "2026光伏日报",
         count: 60
       }
     ],
@@ -36,7 +36,7 @@ module.exports = {
       "@vssue/vuepress-plugin-vssue",
       {
         platform: "github",
-        owner: "wubaiqing",
+        owner: "ankrwu",
         repo: "zaobao",
         clientId: "20ee116870a4be78bb37",
         clientSecret: "13c39d03e4bdc6f13023cc6f318ca132c7522b9f"
@@ -45,7 +45,7 @@ module.exports = {
   ],
   base: "/zaobao/",
   themeConfig: {
-    repo: "wubaiqing/zaobao",
+    repo: "ankrwu/zaobao",
     lastUpdated: "Last Updated",
     docsDir: "docs",
     algolia: {

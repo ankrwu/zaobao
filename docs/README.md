@@ -4,53 +4,32 @@ footer: MIT Licensed | Copyright © 2019-present
 ---
 
 ### 项目背景
-不知道大家有没有跟我一样的情况，总是需要了解一些最新的国家政策法规；其目的可能是为了工作需要，也有可能是关注国家发展动态；总之需要从各类官方网站了解一些政策信息。
 
-以我举例，我经常在以下网站获取信息：
+光伏行业作为新能源领域的重要组成部分，发展日新月异。无论是从业者、投资者还是关注绿色能源的人士，都需要及时了解行业最新动态。
 
-**政策数据库**
-- [人民数据国家政策数据库](https://data.people.com.cn/pd/gjzcxx/index.html) - 中共中央、国务院及各部委政策文件
-- [人民数据政策库](https://data.people.com.cn/pd/zck) - 国家政策、各地政策、产业政策
+本项目整理光伏行业每日要闻，帮助大家快速获取有价值的信息。
 
-**国务院及综合部门**
-- [中国政府网](https://www.gov.cn/) - 国务院政策文件、最新政策
-- [国家发改委](https://www.ndrc.gov.cn/) - 发展规划、投资审批、价格政策
-- [国务院新闻办公室](http://www.scio.gov.cn/) - 新闻发布会、政策解读
+**行业门户网站**
+- [光伏们](https://www.guangfu.com.cn/) - 光伏行业深度报道
+- [光伏资讯](https://www.solarbe.com/) - 光伏行业资讯平台
+- [北极星太阳能光伏网](https://guangfu.bjx.com.cn/) - 光伏行业综合门户
 
-**经济金融部门**
-- [财政部](https://www.mof.gov.cn/) - 财政政策、税收优惠
-- [中国人民银行](http://www.pbc.gov.cn/) - 货币政策、金融监管
-- [商务部](https://www.mofcom.gov.cn/) - 外贸政策、贸易救济
+**行业协会与机构**
+- [中国光伏行业协会 (CPIA)](https://www.chinapv.org.cn/) - 行业数据、标准规范
+- [中国可再生能源学会](https://www.cres.org.cn/) - 学术研究、技术交流
 
-**社会民生部门**
-- [教育部](https://www.moe.gov.cn/) - 教育政策、招生规定
-- [人社部](https://www.mohrss.gov.cn/) - 就业社保、人才政策
-- [民政部](https://www.mca.gov.cn/) - 社会救助、社会组织
-- [国家医保局](https://www.nhsa.gov.cn/) - 医保政策、药品目录
-- [文化和旅游部](https://www.mct.gov.cn/) - 文旅政策、旅游监管
+**政策与数据来源**
+- [国家能源局](https://www.nea.gov.cn/) - 光伏政策、发展规划
+- [国家发改委新能源政策](https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/) - 宏观政策、补贴政策
 
-**产业建设部门**
-- [工信部](https://www.miit.gov.cn/) - 产业政策、行业标准
-- [住建部](https://www.mohurd.gov.cn/) - 房地产、工程建设
-- [应急管理部](https://www.mem.gov.cn/) - 安全生产、应急救援
+内容会以：政策、技术、市场、企业等几大板块作为主要分类。
+如果我的分享对你有所帮助，还请大家给个 ⭐️ 让更多的人知道[它](https://github.com/ankrwu/zaobao)。
 
-**司法执法机关**
-- [最高人民法院](https://www.court.gov.cn/) - 司法解释、典型案例
-- [最高人民检察院](https://www.spp.gov.cn/) - 检察工作、法律监督
+> 访问地址 : <https://ankrwu.github.io/zaobao/other/latest.html>
 
-通过整理后，把每天值得分享的内容发布出来，让大家同时受益。
+> GitHub : <https://github.com/ankrwu/zaobao>
 
-学习和整理政策信息是非常耗时的，所以我希望有一个像日报一样的平台，来快速了解有价值的政策动态。
-
-这个项目会以国家政策体系为主要分享课题。
-内容会以：政策、法规、通知、财税等几大板块作为主要分类。
-如果我的分享对你有所帮助，还请大家给个 ⭐️ 让更多的人知道[它](https://github.com/wubaiqing/zaobao)。
-
-> 访问地址 : <https://wubaiqing.github.io/zaobao/other/latest.html>
-
-> GitHub : <https://github.com/wubaiqing/zaobao>
-
-> RSS : <https://wubaiqing.github.io/zaobao/rss.xml>
+> RSS : <https://ankrwu.github.io/zaobao/rss.xml>
 
 ### 资源分享，参与奉献
 项目安装方式极其简单，如果有更好的资源非常欢迎给大家分享出来，你可以选择提交 Issue 或提交 PR。
@@ -61,20 +40,20 @@ footer: MIT Licensed | Copyright © 2019-present
 下载源码, 请执行下列命令：
 ```bash
 # 克隆代码
-$ git clone https://github.com/wubaiqing/zaobao.git
+$ git clone https://github.com/ankrwu/zaobao.git
 $ cd zaobao
 ```
 
 代码下载完成后, 需要安装依赖：
 ```bash
 # 安装依赖
-$ pnpm install
+$ npm install
 
 # 检查是否符合文档规范
-$ pnpm lint:md
+$ npm run lint:md
 
 # 开始阅读
-$ pnpm doc:dev
+$ npm run doc:dev
 ```
 
 在浏览器中打开 <http://localhost:8080/zaobao/>
