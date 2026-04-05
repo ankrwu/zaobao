@@ -1,4 +1,4 @@
-const readFileList = require("../../scripts/build.js");
+const { generateSidebar } = require("../../scripts/build.js");
 
 module.exports = {
   title: "光伏日报",
@@ -55,11 +55,7 @@ module.exports = {
     nav: [{ text: "留言", link: "/other/talk" }],
     sidebar: [
       ["/", "1. 介绍"],
-      {
-        title: "2026年03月",
-        collapsable: false,
-        children: readFileList("2026", "03")
-      }
+      ...generateSidebar("2026")
     ]
   }
 };
