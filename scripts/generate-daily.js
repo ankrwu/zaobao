@@ -262,6 +262,58 @@ async function parseNDRC() {
 }
 
 /**
+ * 从 URL 中提取日期信息
+ * @param {string} url - 新闻链接
+ * @returns {string} - 日期字符串，格式 YYYYMMDD，无法提取则返回空字符串
+ */
+function extractDateFromUrl(url) {
+  // 匹配常见的日期格式：
+  // - /20260319/ 或 /2026/0319/ 或 /2026/03/19/
+  // - content_1737.html (数字ID)
+  // - 20260319_
+  const patterns = [
+    /\/(\d{4})\/?(\d{2})\/?(\d{2})\//,  // /2026/03/19/ 或 /20260319/
+    /(\d{4})(\d{2})(\d{2})/,              // 20260319
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) {
+      // 如果匹配到了分组，组合成 YYYYMMDD
+      if (match[1] && match[2] && match[3]) {
+        return match[1] + match[2] + match[3];
+      }
+      // 如果是整体匹配
+      if (match[0] && match[0].length === 8) {
+        return match[0];
+      }
+    }
+  }
+
+  // 尝试从 URL 路径中提取日期
+  const pathMatch = url.match(/\/(\d{8})[_/]/);
+  if (pathMatch) {
+    return pathMatch[1];
+  }
+
+  return '';
+}
+
+/**
+ * 从标题中提取日期信息
+ * @param {string} title - 新闻标题
+ * @returns {string} - 日期字符串，格式 YYYYMM，无法提取则返回空字符串
+ */
+function extractDateFromTitle(title) {
+  // 匹配标题中的年份和月份，如 "2025 年第十一期" "2026 年 2 月"
+  const yearMonthMatch = title.match(/(\d{4})\s*年\s*(\d{1,2})\s*月?/);
+  if (yearMonthMatch) {
+    return yearMonthMatch[1] + yearMonthMatch[2].padStart(2, '0');
+  }
+  return '';
+}
+
+/**
  * 获取光伏新闻信息
  */
 async function fetchSolarItems() {
@@ -281,9 +333,14 @@ async function fetchSolarItems() {
     try {
       const items = await source.parse();
       console.log(`  获取到 ${items.length} 条信息\n`);
-      // 为每条新闻添加来源信息
+      // 为每条新闻添加来源信息和日期
       items.forEach(item => {
         item.source = source.name;
+        // 从 URL 和标题中提取日期
+        item.dateFromUrl = extractDateFromUrl(item.url);
+        item.dateFromTitle = extractDateFromTitle(item.title);
+        // 优先使用 URL 中的日期
+        item.sortDate = item.dateFromUrl || item.dateFromTitle || '00000000';
       });
       allItems.push(...items);
       // 添加延迟避免请求过快
@@ -303,6 +360,20 @@ async function fetchSolarItems() {
       uniqueItems.push(item);
     }
   }
+
+  // 按日期降序排序（最新的在前）
+  uniqueItems.sort((a, b) => {
+    // 先按 URL 日期排序
+    if (a.dateFromUrl && b.dateFromUrl) {
+      return b.dateFromUrl.localeCompare(a.dateFromUrl);
+    }
+    // 再按标题日期排序
+    if (a.dateFromTitle && b.dateFromTitle) {
+      return b.dateFromTitle.localeCompare(a.dateFromTitle);
+    }
+    // 最后按 sortDate 排序
+    return b.sortDate.localeCompare(a.sortDate);
+  });
 
   return uniqueItems;
 }
